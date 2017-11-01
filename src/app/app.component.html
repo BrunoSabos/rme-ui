@@ -1,0 +1,84 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<mat-toolbar color="primary" class="mat-elevation-z4">
+  <span>{{title}}</span>
+  <span class="toolbar-spacer"></span>
+  <mat-icon class="toolbar-icon">favorite</mat-icon>
+</mat-toolbar>
+<div class="row">
+  <div class="column-left">
+    <form>
+      <mat-card class="mat-elevation-z4">
+        <mat-form-field class="field-fullwidth">
+          <input matInput placeholder="Database" aria-label="Database" [matAutocomplete]="auto" [formControl]="stateCtrl">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let database of filteredDatabases | async" [value]='database.server + " / " + database.database'>
+              <!--<img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" />-->
+              <span>{{ database.server }} / </span>
+              <b>{{database.database}}</b>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </mat-card>
+      <br/>
+
+      <mat-card class="mat-elevation-z4">
+        <div>
+          <div>
+            <mat-form-field class="field-fullwidth">
+              <input matInput #filter placeholder="Filter">
+            </mat-form-field>
+          </div>
+
+          <mat-table #table [dataSource]="dataSource" class="programmability">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!--&lt;!&ndash; ID Column &ndash;&gt;-->
+            <!--<ng-container matColumnDef="userId">-->
+              <!--<mat-header-cell *matHeaderCellDef> ID </mat-header-cell>-->
+              <!--<mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash; Progress Column &ndash;&gt;-->
+            <!--<ng-container matColumnDef="progress">-->
+              <!--<mat-header-cell *matHeaderCellDef> Progress </mat-header-cell>-->
+              <!--<mat-cell *matCellDef="let row"> {{row.progress}}% </mat-cell>-->
+            <!--</ng-container>-->
+
+            <!-- Check Column -->
+            <!--<ng-container matColumnDef="selected">-->
+              <!--<mat-header-cell *matHeaderCellDef> <mat-checkbox></mat-checkbox> </mat-header-cell>-->
+              <!--<mat-cell *matCellDef="let row"> <mat-checkbox></mat-checkbox> </mat-cell>-->
+            <!--</ng-container>-->
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+            </ng-container>
+
+            <!--&lt;!&ndash; Color Column &ndash;&gt;-->
+            <!--<ng-container matColumnDef="color">-->
+              <!--<mat-header-cell *matHeaderCellDef> Color </mat-header-cell>-->
+              <!--<mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </mat-cell>-->
+            <!--</ng-container>-->
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+      </mat-card>
+    </form>
+  </div>
+  <div class="column-right">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>SQL</mat-card-title>
+        <mat-card-subtitle>query</mat-card-subtitle>
+      </mat-card-header>
+    <sqleditor [(text)]="query"></sqleditor>
+    </mat-card>
+    <mat-card><img src="http://0.0.0.0:9000/image?sql={{query|replaceLineBreaks}}"/></mat-card>
+  </div>
+</div>

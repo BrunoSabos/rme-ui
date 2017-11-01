@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* https://material.angular.io/guide/theming#using-a-pre-built-theme */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+body {
+  margin: 0;
+}
+
+.toolbar-icon {
+  padding: 0 14px;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.row {
+  margin-top: 20px;
+  display: flex;
+  min-height: 48px;
+  padding: 0 24px;
+  align-items: stretch;
+}
+
+.column-left {
+  width: 350px;
+}
+
+.column-right {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  padding-left: 20px;
+}
+
+.column-right > .mat-card {
+  flex: 1;
+}
+
+.field-fullwidth {
+  width: 100%;
+}
+
+.selected {
+  width: 10px;
+}
+
+.programmability {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.programmability .mat-cell {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
