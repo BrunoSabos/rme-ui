@@ -55,7 +55,7 @@
             <!-- Name Column -->
             <ng-container matColumnDef="name">
               <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+              <mat-cell *matCellDef="let row" (click)="showPS(row)"> {{row.name}} </mat-cell>
             </ng-container>
 
             <!--&lt;!&ndash; Color Column &ndash;&gt;-->

@@ -70,6 +70,9 @@ export class AppComponent {
       databases.database.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
+  showPS(ps: StoredProcedure) {
+    this.query = ps.content;
+  }
 
 
   @ViewChild('filter') filter: ElementRef;
@@ -100,6 +103,11 @@ export interface UserData {
   name: string;
   progress: string;
   color: string;
+}
+
+export interface StoredProcedure {
+  name: string;
+  content: string;
 }
 
 /** An example database that the data source uses to retrieve data for the table. */

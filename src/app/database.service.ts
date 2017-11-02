@@ -22,7 +22,8 @@ export class DatabaseService{
       .map(response => {
         console.log('response');
         console.log(response);
-        return response.json().map(s => new SP(s)) as SP[];
+        const json = response.json();
+        return Object.keys(json).map(s => new SP(s, json[s])) as SP[];
       });
   }
 }
@@ -34,8 +35,10 @@ export class Database {
 
 export class SP {
   name: string;
+  content: string;
 
-  constructor(name: string) {
+  constructor(name: string, content: string) {
     this.name = name;
+    this.content = content;
   }
 }
