@@ -9,9 +9,11 @@
     <form>
       <mat-card class="mat-elevation-z4">
         <mat-form-field class="field-fullwidth">
-          <input matInput placeholder="Database" aria-label="Database" [matAutocomplete]="auto" [formControl]="stateCtrl">
+          <input matInput placeholder="Database" aria-label="Database" [matAutocomplete]="auto"
+                 [formControl]="stateCtrl">
           <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let database of filteredDatabases | async" [value]='database.server + " / " + database.database'>
+            <mat-option *ngFor="let database of filteredDatabases | async"
+                        [value]='database.server + " / " + database.database'>
               <!--<img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" />-->
               <span>{{ database.server }} / </span>
               <b>{{database.database}}</b>
@@ -36,32 +38,32 @@
 
             <!--&lt;!&ndash; ID Column &ndash;&gt;-->
             <!--<ng-container matColumnDef="userId">-->
-              <!--<mat-header-cell *matHeaderCellDef> ID </mat-header-cell>-->
-              <!--<mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>-->
+            <!--<mat-header-cell *matHeaderCellDef> ID </mat-header-cell>-->
+            <!--<mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>-->
             <!--</ng-container>-->
 
             <!--&lt;!&ndash; Progress Column &ndash;&gt;-->
             <!--<ng-container matColumnDef="progress">-->
-              <!--<mat-header-cell *matHeaderCellDef> Progress </mat-header-cell>-->
-              <!--<mat-cell *matCellDef="let row"> {{row.progress}}% </mat-cell>-->
+            <!--<mat-header-cell *matHeaderCellDef> Progress </mat-header-cell>-->
+            <!--<mat-cell *matCellDef="let row"> {{row.progress}}% </mat-cell>-->
             <!--</ng-container>-->
 
             <!-- Check Column -->
             <!--<ng-container matColumnDef="selected">-->
-              <!--<mat-header-cell *matHeaderCellDef> <mat-checkbox></mat-checkbox> </mat-header-cell>-->
-              <!--<mat-cell *matCellDef="let row"> <mat-checkbox></mat-checkbox> </mat-cell>-->
+            <!--<mat-header-cell *matHeaderCellDef> <mat-checkbox></mat-checkbox> </mat-header-cell>-->
+            <!--<mat-cell *matCellDef="let row"> <mat-checkbox></mat-checkbox> </mat-cell>-->
             <!--</ng-container>-->
 
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-              <mat-cell *matCellDef="let row" (click)="showPS(row)"> {{row.name}} </mat-cell>
+              <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+              <mat-cell *matCellDef="let row" (click)="showPS(row)"> {{row.name}}</mat-cell>
             </ng-container>
 
             <!--&lt;!&ndash; Color Column &ndash;&gt;-->
             <!--<ng-container matColumnDef="color">-->
-              <!--<mat-header-cell *matHeaderCellDef> Color </mat-header-cell>-->
-              <!--<mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </mat-cell>-->
+            <!--<mat-header-cell *matHeaderCellDef> Color </mat-header-cell>-->
+            <!--<mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </mat-cell>-->
             <!--</ng-container>-->
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -77,8 +79,21 @@
         <mat-card-title>SQL</mat-card-title>
         <mat-card-subtitle>query</mat-card-subtitle>
       </mat-card-header>
-    <sqleditor [(text)]="query"></sqleditor>
+      <button mat-raised-button color="primary" (click)="getImage()">Refresh image</button>
+      <div class="ace-editor-container">
+        <sqleditor [(text)]="query"></sqleditor>
+      </div>
     </mat-card>
-    <mat-card><img src="http://0.0.0.0:9000/image?sql={{query|replaceLineBreaks}}"/></mat-card>
+    <mat-card>
+      <div *ngIf="imageMessage != null">
+        <mat-icon>error</mat-icon>
+        {{imageMessage}}
+      </div>
+      <div *ngIf="imageMessage == null">
+        <!--<div [innerHTML]="image"></div>-->
+        <div #imageContainer></div>
+      </div>
+      <img src="http://0.0.0.0:9000/image?sql={{query|replaceLineBreaks}}"/>
+    </mat-card>
   </div>
 </div>

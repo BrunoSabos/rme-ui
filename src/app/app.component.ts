@@ -19,7 +19,14 @@ import {DataSource} from '@angular/cdk/collections';
   providers: [DatabaseService]
 })
 export class AppComponent {
-  query = 'select T1.b, T2.c, T3.k\nfrom T1\ninner join T2\n\ton T1.a = T2.a\ninner join T3\n\ton T3.e = T1.e\nwhere T2.d = \'val\'\n\tand T2.c = T3.e';
+  query = `select T1.b, T2.c, T3.k
+from T1
+inner join T2
+\ton T1.a = T2.a
+inner join T3
+\ton T3.e = T1.e
+where T2.d = 'val'
+\tand T2.c = T3.e`;
   title = 'rme';
   stateCtrl: FormControl;
   filteredDatabases: Observable<any[]>;
@@ -28,14 +35,15 @@ export class AppComponent {
   databases: Database[] = [];
 
 
-
-
   displayedColumns = [/*'selected', */'name'];
   // exampleDatabase = new ExampleDatabase();
   dataSource: ExampleDataSource | null;
+
+  imageMessage: string = null;
+
+  image: string = null;
+
   // dataSource: SP[] = null;
-
-
 
 
   constructor(private databaseService: DatabaseService) {
@@ -46,7 +54,7 @@ export class AppComponent {
       .startWith(null)
       .map(state => state ? this.filterDatabases(state) : this.databases.slice());
 
-    this.databaseService.list().subscribe(data => {
+    this.databaseService.databaseList().subscribe(data => {
       console.log('component');
       console.log(data);
 
@@ -55,7 +63,7 @@ export class AppComponent {
       this.stateCtrl.reset();
     });
 
-    this.databaseService.programmabilitySP('LOGSQL02', 'VPN3').subscribe(data => {
+    this.databaseService.programmabilitySPList('LOGSQL02', 'VPN3').subscribe(data => {
       console.log('component');
       console.log(data);
 
@@ -71,14 +79,20 @@ export class AppComponent {
   }
 
   showPS(ps: StoredProcedure) {
-    this.query = ps.content;
-  }
+    // this.query = ps.content;
+    this.databaseService.programmabilitySPGet(ps.server, ps.database, ps.name).subscribe(data => {
+      this.query = data;
 
+      this.getImage();
+    });
+  }
 
   @ViewChild('filter') filter: ElementRef;
 
+  @ViewChild('imageContainer') dataContainer: ElementRef;
+
   ngOnInit() {
-  //   this.dataSource = new ExampleDataSource(this.exampleDatabase);
+    //   this.dataSource = new ExampleDataSource(this.exampleDatabase);
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
       .debounceTime(150)
       .distinctUntilChanged()
@@ -88,6 +102,20 @@ export class AppComponent {
         }
         this.dataSource.filter = this.filter.nativeElement.value;
       });
+  }
+
+  private getImage() {
+    this.databaseService.image(this.query).subscribe(data => {
+      console.log('image data');
+      console.log(data);
+      this.imageMessage = null;
+      // this.image = this.sanitizer.bypassSecurityTrustHtml(data);
+      this.dataContainer.nativeElement.innerHTML = data;
+    }, error => {
+      console.log('error data');
+      console.log(error.text());
+      this.imageMessage = error.text();
+    });
   }
 }
 
@@ -106,6 +134,8 @@ export interface UserData {
 }
 
 export interface StoredProcedure {
+  server: string;
+  database: string;
   name: string;
   content: string;
 }
@@ -114,11 +144,16 @@ export interface StoredProcedure {
 export class ExampleDatabase {
   /** Stream that emits whenever the data has been modified. */
   dataChange: BehaviorSubject<UserData[]> = new BehaviorSubject<UserData[]>([]);
-  get data(): UserData[] { return this.dataChange.value; }
+
+  get data(): UserData[] {
+    return this.dataChange.value;
+  }
 
   constructor() {
     // Fill up the database with 100 users.
-    for (let i = 0; i < 100; i++) { this.addUser(); }
+    for (let i = 0; i < 100; i++) {
+      this.addUser();
+    }
   }
 
   /** Adds a new user to the database. */

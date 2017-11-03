@@ -55,3 +55,20 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.ace-editor-container {
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  height: 500px;
+}
+
+.ace-editor {
+  width: 100%;
+  height: 100%;
+  position: absolute; /* Added */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

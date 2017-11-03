@@ -9,7 +9,10 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // https://material.angular.io/guide/getting-started#step-3-import-the-component-modules
-import {MatCardModule, MatCheckboxModule, MatIconModule, MatRippleModule, MatTableModule, MatToolbarModule} from '@angular/material';
+import {
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatRippleModule, MatTableModule,
+  MatToolbarModule
+} from '@angular/material';
 import {MatFormFieldModule, MatAutocompleteModule, MatOptionModule, MatInputModule} from '@angular/material';
 
 import {HttpModule} from '@angular/http';
@@ -39,6 +42,8 @@ import {ReplacelinebreaksPipe} from './replacelinebreaks.pipe';
     MatCardModule,
     MatCheckboxModule,
     MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
     MatIconModule,
     AceEditorModule
   ],
