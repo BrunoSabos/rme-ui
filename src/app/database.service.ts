@@ -8,12 +8,14 @@ export class DatabaseService {
   constructor(private http: Http) {
   }
 
-  databaseList(): Observable<Database[]> {
-    return this.http.get('http://0.0.0.0:9000/databases')
+  databaseList(): Observable<Server[]> {
+    return this.http.get('http://0.0.0.0:9000/servers')
       .map(response => {
         console.log('response');
         console.log(response);
-        return response.json() as Database[];
+        const databases = response.json() as Server[];
+        return databases;
+        // return databases.map(d => {d.fullName = d.server + ' / ' + d.database; return d});
       });
   }
 
@@ -47,9 +49,20 @@ export class DatabaseService {
   }
 }
 
+export class Server {
+  name: string;
+  databases: Database[];
+
+  constructor(name: string, databases: Database[]) {
+    this.name = name;
+    this.databases = databases;
+  }
+}
+
 export class Database {
   server: string;
-  database: string;
+  name: string;
+  fullName: string;
 }
 
 export class SP {

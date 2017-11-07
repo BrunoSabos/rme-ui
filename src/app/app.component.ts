@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {Observable} from 'rxjs/Observable';
@@ -8,9 +8,14 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/observable/fromEvent';
-import {Database, DatabaseService, SP} from './database.service';
+import {Database, DatabaseService, Server, SP} from './database.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {DataSource} from '@angular/cdk/collections';
+import 'rxjs/add/operator/groupBy';
+import {GroupedObservable} from 'rxjs/operators/groupBy';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/reduce';
+import {groupBy} from 'rxjs/operator/groupBy';
 
 @Component({
   selector: 'app-root',
@@ -28,11 +33,12 @@ inner join T3
 where T2.d = 'val'
 \tand T2.c = T3.e`;
   title = 'rme';
-  stateCtrl: FormControl;
-  filteredDatabases: Observable<any[]>;
+  databaseFilterCtrl: FormControl;
+  databaseAutocompleteCtrl: FormControl;
+  filteredDatabases: Observable<Server[]>;
   // databaseService = this.databaseService;
 
-  databases: Database[] = [];
+  databases: Server[] = [];
 
 
   displayedColumns = [/*'selected', */'name'];
@@ -45,12 +51,17 @@ where T2.d = 'val'
 
   // dataSource: SP[] = null;
 
+  @ViewChild('filter') filter: ElementRef;
+  @ViewChild('imageContainer') dataContainer: ElementRef;
+  @ViewChild('databaseFilter') databaseFilter: HTMLInputElement;
+
 
   constructor(private databaseService: DatabaseService) {
     // this.databaseService = _databaseService;
-    this.stateCtrl = new FormControl();
+    this.databaseFilterCtrl = new FormControl();
+    // this.databaseAutocompleteCtrl = new FormControl();
 
-    this.filteredDatabases = this.stateCtrl.valueChanges
+    this.filteredDatabases = this.databaseFilterCtrl.valueChanges
       .startWith(null)
       .map(state => state ? this.filterDatabases(state) : this.databases.slice());
 
@@ -60,7 +71,7 @@ where T2.d = 'val'
 
       this.databases = data;
 
-      this.stateCtrl.reset();
+      this.databaseFilterCtrl.reset();
     });
 
     this.databaseService.programmabilitySPList('LOGSQL02', 'VPN3').subscribe(data => {
@@ -69,13 +80,17 @@ where T2.d = 'val'
 
       this.dataSource = new ExampleDataSource(data);
 
-      this.stateCtrl.reset();
+      this.databaseFilterCtrl.reset();
     });
   }
 
   filterDatabases(name: string) {
     return this.databases.filter(databases =>
-      databases.database.toLowerCase().indexOf(name.toLowerCase()) === 0);
+      databases.databases.filter(d => d.fullName.toLowerCase().indexOf(name.toLowerCase()) === 0).length > 0);
+  }
+
+  clearDatabase() {
+    this.databaseFilterCtrl.reset();
   }
 
   showPS(ps: StoredProcedure) {
@@ -86,10 +101,6 @@ where T2.d = 'val'
       this.getImage();
     });
   }
-
-  @ViewChild('filter') filter: ElementRef;
-
-  @ViewChild('imageContainer') dataContainer: ElementRef;
 
   ngOnInit() {
     //   this.dataSource = new ExampleDataSource(this.exampleDatabase);
@@ -117,6 +128,10 @@ where T2.d = 'val'
       this.imageMessage = error.text();
     });
   }
+
+  // InputChanged(data: any) {
+  //   console.log(data);
+  // }
 }
 
 /** Constants used to fill up our data base. */

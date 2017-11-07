@@ -9,15 +9,16 @@
     <form>
       <mat-card class="mat-elevation-z4">
         <mat-form-field class="field-fullwidth">
-          <input matInput placeholder="Database" aria-label="Database" [matAutocomplete]="auto"
-                 [formControl]="stateCtrl">
+          <input #databaseFilter matInput placeholder="Database" aria-label="Database" [matAutocomplete]="auto"
+                 [formControl]="databaseFilterCtrl">
+          <mat-icon matSuffix (click)="clearDatabase()">clear</mat-icon>
           <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let database of filteredDatabases | async"
-                        [value]='database.server + " / " + database.database'>
-              <!--<img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" />-->
-              <span>{{ database.server }} / </span>
-              <b>{{database.database}}</b>
-            </mat-option>
+            <mat-optgroup *ngFor="let server of filteredDatabases | async" [label]="server.name">
+              <mat-option *ngFor="let database of server.databases" [value]="database.fullName">
+                <!--<span>{{ database.server }} / </span>-->
+                <b>{{database.name}}</b>
+              </mat-option>
+            </mat-optgroup>
           </mat-autocomplete>
         </mat-form-field>
       </mat-card>
@@ -86,14 +87,14 @@
     </mat-card>
     <mat-card>
       <div *ngIf="imageMessage != null">
-        <mat-icon>error</mat-icon>
+        <mat-icon>whatshot</mat-icon>
         {{imageMessage}}
       </div>
       <div *ngIf="imageMessage == null">
         <!--<div [innerHTML]="image"></div>-->
         <div #imageContainer></div>
       </div>
-      <img src="http://0.0.0.0:9000/image?sql={{query|replaceLineBreaks}}"/>
+      <!--<img src="http://0.0.0.0:9000/image?sql={{query|replaceLineBreaks}}"/>-->
     </mat-card>
   </div>
 </div>
