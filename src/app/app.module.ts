@@ -10,7 +10,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // https://material.angular.io/guide/getting-started#step-3-import-the-component-modules
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatRippleModule, MatTableModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatProgressSpinnerModule, MatRippleModule, MatTableModule,
   MatToolbarModule
 } from '@angular/material';
 import {MatFormFieldModule, MatAutocompleteModule, MatOptionModule, MatInputModule} from '@angular/material';
@@ -45,6 +45,7 @@ import {ReplacelinebreaksPipe} from './replacelinebreaks.pipe';
     MatIconModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     AceEditorModule
   ],
   providers: [],

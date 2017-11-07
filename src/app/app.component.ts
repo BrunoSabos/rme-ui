@@ -49,6 +49,8 @@ where T2.d = 'val'
 
   image: string = null;
 
+  programmabilityLoading = false;
+
   // dataSource: SP[] = null;
 
   @ViewChild('filter') filter: ElementRef;
@@ -74,14 +76,14 @@ where T2.d = 'val'
       this.databaseFilterCtrl.reset();
     });
 
-    this.databaseService.programmabilitySPList('LOGSQL02', 'VPN3').subscribe(data => {
-      console.log('component');
-      console.log(data);
-
-      this.dataSource = new ExampleDataSource(data);
-
-      this.databaseFilterCtrl.reset();
-    });
+    // this.databaseService.programmabilitySPList('LOGSQL02', 'VPN3').subscribe(data => {
+    //   console.log('component');
+    //   console.log(data);
+    //
+    //   this.dataSource = new ExampleDataSource(data);
+    //
+    //   this.databaseFilterCtrl.reset();
+    // });
   }
 
   filterDatabases(name: string) {
@@ -91,6 +93,15 @@ where T2.d = 'val'
 
   clearDatabase() {
     this.databaseFilterCtrl.reset();
+  }
+
+  chooseDB(database: Database) {
+    this.programmabilityLoading = true;
+    this.dataSource = null;
+    this.databaseService.programmabilitySPList(database.server, database.name).subscribe(data => {
+      this.dataSource = new ExampleDataSource(data);
+      this.programmabilityLoading = false;
+    });
   }
 
   showPS(ps: StoredProcedure) {
@@ -153,6 +164,12 @@ export interface StoredProcedure {
   database: string;
   name: string;
   content: string;
+}
+
+export interface Database {
+  server: string;
+  fullName: string;
+  name: string;
 }
 
 /** An example database that the data source uses to retrieve data for the table. */
