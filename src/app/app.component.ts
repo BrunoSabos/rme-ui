@@ -36,33 +36,20 @@ where T2.d = 'val'
   databaseFilterCtrl: FormControl;
   databaseAutocompleteCtrl: FormControl;
   filteredDatabases: Observable<Server[]>;
-  // databaseService = this.databaseService;
-
   databases: Server[] = [];
-
-
+  
   displayedColumns = [/*'selected', */'name'];
-  // exampleDatabase = new ExampleDatabase();
   dataSource: ExampleDataSource | null;
-
   imageMessage: string = null;
-
   image: string = null;
-
   programmabilityLoading = false;
-
-  // dataSource: SP[] = null;
-
   @ViewChild('filter') filter: ElementRef;
   @ViewChild('imageContainer') dataContainer: ElementRef;
   @ViewChild('databaseFilter') databaseFilter: HTMLInputElement;
 
 
   constructor(private databaseService: DatabaseService) {
-    // this.databaseService = _databaseService;
     this.databaseFilterCtrl = new FormControl();
-    // this.databaseAutocompleteCtrl = new FormControl();
-
     this.filteredDatabases = this.databaseFilterCtrl.valueChanges
       .startWith(null)
       .map(state => state ? this.filterDatabases(state) : this.databases.slice());
